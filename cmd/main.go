@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/HazarBakir/Project-Leaf/internal/handlers"
+	"github.com/HazarBakir/Project-Leaf/handlers"
 	"github.com/gin-gonic/gin"
 )
-
-func main() {
-
-	r := gin.Default()
-	r.POST("/", handlers.Homepage)
-	r.Run(":8080")
-}
+	
+	func main() {
+		r := gin.Default()
+		r.GET("/", handlers.Homepage)
+		r.Run(":8080")
+	}
+	
