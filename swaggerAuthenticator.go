@@ -26,8 +26,12 @@ func generateAPIToken() string {
 
 // Function to set a new token for the given username
 func setAPIToken(username string) string {
-    apiToken = generateAPIToken()
-    return apiToken
+    if username == swaggerAuthenticationUsername {
+        apiToken = generateAPIToken()
+        return apiToken
+    } else {
+        return "Invalid username"
+    }
 }
 
 // Middleware to authenticate API requests
@@ -46,4 +50,10 @@ func authMiddleware(c *gin.Context) {
     }
 
     c.Next()
+}
+
+func getApiToken(c *gin.Context) {
+	username := c.PostForm("username")
+	token := setAPIToken(username)
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }

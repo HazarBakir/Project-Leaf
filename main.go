@@ -1,12 +1,13 @@
 package main
 
 import (
-    "net/http"
     "github.com/gin-gonic/gin"
     swaggerFiles "github.com/swaggo/files"
     ginSwagger "github.com/swaggo/gin-swagger"
     _ "github.com/HazarBakir/Project-Leaf/docs" // Import generated docs
 )
+
+var swaggerAuthenticationUsername = "lothlorien"
 
 // @title Project Leaf API
 // @version 1.0.0
@@ -31,30 +32,18 @@ func main() {
     router := gin.Default()
 
     // Public route to generate a token (for demonstration)
-    router.POST("/generate-token", func(c *gin.Context) {
-        username := c.PostForm("username")
-        if username == "" {
-            c.JSON(http.StatusBadRequest, gin.H{"error": "Username is required"})
-            return
-        }
-        if username == "lothlorien" {
-        token := setAPIToken(username)
-        c.JSON(http.StatusOK, gin.H{"token": token})
-        } else {
-            c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username"})
-        }
-    })
+    router.POST("/generate-token", getApiToken)
 
 
     // Protected routes
-    authorized := router.Group("/")
-    authorized.Use(authMiddleware)
+    swaggerAuthorized := router.Group("/")
+    swaggerAuthorized.Use(authMiddleware)
     {
-        authorized.GET("/books", GetBooks)
-        authorized.GET("/books/:id", GetBook)
-        authorized.POST("/books", CreateBook)
-        authorized.PUT("/books/:id", UpdateBook)
-        authorized.DELETE("/books/:id", DeleteBook)
+        swaggerAuthorized.GET("/books", GetBooks)
+        swaggerAuthorized.GET("/books/:id", GetBook)
+        swaggerAuthorized.POST("/books", CreateBook)
+        swaggerAuthorized.PUT("/books/:id", UpdateBook)
+        swaggerAuthorized.DELETE("/books/:id", DeleteBook)
     }
 
     url := ginSwagger.URL("http://localhost:8000/swagger/doc.json")
