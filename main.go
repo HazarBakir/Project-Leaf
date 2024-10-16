@@ -29,6 +29,9 @@ var swaggerAuthenticationUsername = "lothlorien"
 // @in header
 // @name Authorization
 func main() {
+
+    ConnectDatabase()
+
     router := gin.Default()
 
     // Public route to generate a token (for demonstration)
